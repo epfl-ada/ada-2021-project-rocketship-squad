@@ -75,3 +75,13 @@ To make the visualizations interactive we will connect our Google DataStudio das
 - Nico : Visualizations, and analysis of topic country distributions. 
 - Fabrizio : Topic assignment with LDA, analysis of topic distribution by continent and quote distribution by coutry's GDP and population 
 
+
+#### Directory structure
+- Project_Milestone_2.ipynb - intitial processing pipelines submitted with milestone 2
+- PipelineToBQ_spacyGeoAndLemmasAnnotation.py - text processing script for extracting geopolitical entitiy names, lemmas, and stems from quotes 
+- PipelineToBQ_quotebank.ipynb -  indexing quotebank dataset in to BigQuery
+- PipelineToBQ_wikidataAndSpeakersAttributes.ipynb - indexing speaker attributes into our BQ database
+- ExploratoryAnalysis.ipynb - analysis on topic distributions,  identifying events from data, and visualizations for categories. 
+- LDA_Model - contains trained LDA classifier
+- LDA_Topic_Notebooks - contains LDA training for topics and subtopics and script to classfy the dataset using the trained classifier
+
