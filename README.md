@@ -1,7 +1,9 @@
 # README.md
 ## [ADA project] Exploring the biases and interest of Americans
-*Rocketship Squad : Ruben Burdin, Fabrizio Forte, Julia Majkowska, Nico Sperry*
-[**Datastory**](https://datastudio.google.com/embed/reporting/2da04b94-0570-4e83-a00d-41f7752bcd02/page/p_uygeukgbqc)
+*Rocketship Squad : Ruben Burdin, Fabrizio Forte, Julia Majkowska, Nico Sperry* 
+
+
+[**Datastory link**](https://datastudio.google.com/embed/reporting/2da04b94-0570-4e83-a00d-41f7752bcd02/page/p_uygeukgbqc)
 
 ### Abstract
 News publications are a reflection of the current state of the world. Based on the content of the articles we can learn not only about events and social issues. We want to use the Quotebank to extract in what contexts are US speakers talking about other countries. We annotate quotes with topics using LDA and add sentiment annotation using BigQuery library funtions. We look at spikes in distribution of quotes per coutnry to identify meaningful events and characterize them by lemmas from related quotes.   
