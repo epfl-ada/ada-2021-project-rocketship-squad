@@ -1,19 +1,23 @@
 # README.md
-## [ADA project] Hotwords around the world
+## [ADA project] What does USA think about the world
 *Rocketship Squad : Ruben Burdin, Fabrizio Forte, Julia Majkowska, Nico Sperry*
 
 ### Abstract
-News publications are a reflection of the current state of the world. Based on the content of the articles we can learn not only about events and social issues. We want to use the Quotebank to extract this information. Using quotes we can extract words and phrases which suddenly gain large popularity within the corpus to identify the most important subjects within time intervals. We will couple that with any geographical information that can also be found within a quote to create a mapping between the hotword and location. Additionally, we will create a model to assign words from the corpus to a subject (topicality analysis). 
+News publications are a reflection of the current state of the world. Based on the content of the articles we can learn not only about events and social issues. We want to use the Quotebank to extract in what contexts are US speakers talking about other countries. We annotate quotes with topics using LDA and add sentiment annotation using BigQuery library funtions. We look at spikes in distribution of quotes per coutnry to identify meaningful events and characterize them by lemmas from related quotes.   
 
 ### Research questions
- - What are the most pressing social issues for particular time frames? 
-- Having identified the hotwords for a particular interval, which news outlets and authors of which gender or nationality are more likely to address these issues? 
-- Is the co-occurrence of mentions of events and their geographical locations constant in time? (People start referring to the “Fukushima nuclear disaster” simply as the “nuclear disaster” over time.) 
-- Which subjects and hotwords are most commonly addressed in which countries?
+ - Which countries attract the most interest of American speakers? 
+     - Are those just rich countries? 
+     - Are those just populous countries? 
+ - Are the most interesting countries constant in time? 
+- Which countries are mention in a positive context and which in negative? 
+- In what topics are the countries mentioned? 
+- Is the distribution of categories the same for all countries? 
+- What events can spike the interest of US speakers? 
+
 ### Additional datasets
-- [**GeoNames**](https://geonames.nga.mil/gns/html/namefiles.html) - a dataset containing a mapping of geographical names to their coordinates and countries.  
+- [**Gazeteer**](http://download.geonames.org/export/dump/) - a dataset containing a mapping of geographical names to their coordinates and countries.  
 - [**World Bank GDP per Capita dataset**](https://data.worldbank.org/indicator/NY.GDP.PCAP.CD?view=chart) - a dataset containing country names and population data will be used to decide ties if we have multiple country annotations.
-- [**GeoJson files for countries**](https://datahub.io/core/geo-countries) - used for visualizing countries on a map in data studio 
 - [**Wikidata**](https://drive.google.com/drive/folders/1VAFHacZFh0oxSxilgNByb1nlNsqznUf0)-we plan to explore a relationship between the quote author's nationality and gender and how likely they are to address a current hotword. 
 
 ### Methods
@@ -21,17 +25,7 @@ News publications are a reflection of the current state of the world. Based on t
 We uploaded the datasets into the cloud database server Google BigQuery (BQ). For analysis and visualization, BQ offers many tools to quickly filter and access the data such as the built-in SQL query interface and DataStudio for visualizations.
 #### Quote processing
 For every quote we will have to extract geographical names, tokenize, lemmatize and remove stopwords from the text of the quote. All this is done using spacy tokenization, lemmatization and named entity recognition features. For efficiency, we process the quotes in parallel. 
-To determine the geographical location associated with the hotword we gather all geographical names, look them up by country and choose with a majority vote then disambiguate based on the country's GDP in case of ties. If time and data permits we will narrow down the location further to a city/region. 
-
-####  Finding hotwords
-
-First, we gather unigram statistics per quotes and aggregate them by day. From a preliminary, analysis we can see that the number of quotes drops significantly during weekends. We need to take this into account for our analysis.
-Furthermore, compute bigrams statistics to determine which of them can be considered as a single hotword. 
-The correlation between words can be computed following the formula ([source](https://www.tidytextmining.com/ngrams.html)): 
-$\phi = \frac{c_{w_1, w_2}(C - c_{w_1}-c_{w_2} + c_{w_1, w_2}) - c_{w_1}c_{w_2}}{c_{w_1}c_{w_2}(C-c_{w_1})(C-c_{w_1})}$, where $C = |corpus|$ 
-and $C_S$ are number of quotes containing words in $S$.
-The statistics are mostly computed with BQ queries for performance. 
-To determine hotwords we will look at data aggregated by day and by week, calculate the mean and standard deviation and consider tokens/phrases which have a period when they occur over $k \times {StandardDeviation}$ times, where k will be adjusted for performance. 
+To determine the geographical location associated with the hotword we gather all geographical names and assign them to a country using the Gazeteer dataset. We annotate only country names, names which can be matched unambiguously to a country and names of geographical entities with a population of over 1000 000. This gives us fairly high quality annotations, thought we observed some false annotations Michael Jordan's last name causing the quote to be matched to country Jordan, or annotating Gaza as a region of Mozambique rather then the Gaza strip.  
 
 #### Topic finding
 We use LDA, an unsupervised learning algorithm that associates to each quote a mixture of topics.
@@ -70,25 +64,11 @@ To make the visualizations interactive we will connect our Google DataStudio das
 - Word cloud visualizations for common hotwords in selected countries (by speaker and by domain name of source)
 - Timeline (a horizontal slider) which will let the user select the time interval and render a list of hotwords and trending topics
 
-### Proposed timeline and individual Milestones
-
-#### Milestone 2
-- Julia : Create an efficient data preprocessing pipeline. Create a README.
-- Ruben : Pipe the data into Big Query and clean it. Analyse the data for quality and observations to be excluded from further processing for project Milestone 3.
-- Nico : Create unigram and bigram statistics gathering pipelines. Conduct initial analysis on hotword determination methods. 
-- Fabrizio : Create topic determination model training pipeline and pipeline for downstream topic recognition in the whole dataset. Conduct initial analysis on quality and computational feasibility of proposed methods. 
-
-#### Until November 26
-Running the preprocessing and gathering statistics pipelines for assigned years of the dataset.
-- Julia : 2020, 2016
-- Fabrizio : 2019, 2015
-- Nico : 2018
-- Ruben : 2017
-Building all NLP models and sketch of the dashboard. Conduct first analysis on quote topicality.
+### Individual contribuitons
 
 #### Milestone 3
-- Julia : For determined hotword candidates determine Geographical locations and combine it with GeoJson files for visualizations. 
-- Nico : Determine time intervals when hotwords are hot
-- Fabrizio : Train and run topic evaluation on the corpus. 
-- Ruben : Prepare visualizations with prepared data from BQ. Preprocess the wikidata and load in BQ.
+- Julia : Create an efficient data preprocessing pipeline. Created a README. Performed spike analysis to find meaningful events.Create the outline of datastory.  
+- Ruben : Pipe the data into Big Query and clean it. Sentiment analysis. Visualization. 
+- Nico : Visualizations, and analysis of topic country distributions. 
+- Fabrizio : Topic assignment with LDA, analysis of topic distribution by continent and quote distribution by coutry's GDP and population 
 
